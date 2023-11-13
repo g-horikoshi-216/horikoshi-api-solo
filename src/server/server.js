@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const knex = require('./knex');
 
 const reservationsMock = [{id: 0, artist : "mr.children", song: "HANABI"},{id: 1, artist : "B'z", song: "ultra soul"}];
 const artistsMock = [ {id: 0, artist: "mr.children"}, {id:1, artist: "B'z"}];
