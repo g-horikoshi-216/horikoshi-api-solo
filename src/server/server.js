@@ -15,9 +15,23 @@ function setUpServer() {
         res.sendStatus(200);
     })
 
+    // reservations
     app.get('/reservations', (req, res) => {
+        // use mockdata
         res.status(200).json(reservationsMock);
     })
+
+
+    // artists
+    app.get('/artists', (req, res) => {
+        // res.json(artistsMock);
+        knex("artists").select("id","name")
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
 
 
 
