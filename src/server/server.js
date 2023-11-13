@@ -74,6 +74,19 @@ function setUpServer() {
         })
     });
 
+    app.get('/artists/search', (req, res) => {
+        knex.queryBuilder()
+        .select('songs.id','songs.name as name', 'artists.name as artistName' )
+        .from('songs')
+        .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .where('artists.name', 'ilike' , req.query.q)
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
+
     app.post('/artists', (req,res) => {
         req.body.forEach( obj => {
             knex('artists')
@@ -101,9 +114,19 @@ function setUpServer() {
         })
     });
 
-    app.get('/songs', (req, res) => {
-        k
-    })
+    app.get('/songs/search', (req, res) => {
+        console.log(req.query.q)
+        knex.queryBuilder()
+        .select('songs.id','songs.name as name', 'artists.name as artistName' )
+        .from('songs')
+        .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .where('songs.name', 'ilike', req.query.q)
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
 
     app.get('/:artistIdorName/songs', (req, res) => {
         const artistIdorName = req.params.artistIdorName;
@@ -159,11 +182,9 @@ function setUpServer() {
         }
     });
 
-    
-
 
 
     return app;
 }
 
-module.exports = setUpServer;
+module.exports = { setUpServer };
