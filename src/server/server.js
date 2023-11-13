@@ -17,13 +17,11 @@ function setUpServer() {
 
     // reservations
     app.get('/reservations', (req, res) => {
-        // use mockdata
         res.status(200).json(reservationsMock);
     })
 
     // artists
     app.get('/artists', (req, res) => {
-        // res.json(artistsMock);
         knex('artists').select('id','name')
         .then(results => res.json(results))
         .catch(err => {
@@ -34,7 +32,6 @@ function setUpServer() {
 
     // songs
     app.get('/songs', (req, res) => {
-        // res.json(artistsMock);
         knex.queryBuilder()
         .select('songs.id','songs.name as name', 'artists.name as artistName' )
         .from('songs')
@@ -45,6 +42,22 @@ function setUpServer() {
             res.sendStatus(500);
         })
     });
+
+    app.get('/:artistName/songs', (req, res) => {
+        const artistName = req.params.artistName;
+        console.log(artistName);
+        knex.queryBuilder()
+        .select('songs.id','songs.name as name', 'artists.name as artistName' )
+        .from('songs')
+        .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .where('artists.name', artistName)
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
+
 
 
     return app;

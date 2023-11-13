@@ -3,7 +3,6 @@ const chaiHttp = require('chai-http');
 const setUpServer = require('../src/server/server');
 
 chai.use(chaiHttp);
-const expect = chai.expect
 chai.should();
 
 const server = setUpServer();
@@ -23,14 +22,18 @@ describe('livedam server test', () => {
     it ('GET /artists' , async () => {
         const res = await chai.request(server).get('/artists');
         res.status.should.to.equal(200);
-        console.log(res.body);
         res.body.length.should.to.equal(3);
     });
 
     it ('GET /songs' , async () => {
         const res = await chai.request(server).get('/songs');
         res.status.should.to.equal(200);
-        console.log(res.body);
         res.body.length.should.to.equal(6);
+    });
+
+    it ('GET /:artists/songs' , async () => {
+        const res = await chai.request(server).get('/mr.children/songs');
+        res.status.should.to.equal(200);
+        res.body.length.should.to.equal(3);
     });
 })
