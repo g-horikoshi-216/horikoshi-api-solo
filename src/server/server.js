@@ -21,11 +21,10 @@ function setUpServer() {
         res.status(200).json(reservationsMock);
     })
 
-
     // artists
     app.get('/artists', (req, res) => {
         // res.json(artistsMock);
-        knex("artists").select("id","name")
+        knex('artists').select('id','name')
         .then(results => res.json(results))
         .catch(err => {
             console.log(err);
@@ -33,6 +32,19 @@ function setUpServer() {
         })
     });
 
+    // songs
+    app.get('/songs', (req, res) => {
+        // res.json(artistsMock);
+        knex.queryBuilder()
+        .select('songs.id','songs.name as name', 'artists.name as artistName' )
+        .from('songs')
+        .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
 
 
     return app;

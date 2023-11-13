@@ -26,4 +26,11 @@ describe('livedam server test', () => {
         console.log(res.body);
         res.body.length.should.to.equal(3);
     });
+
+    it ('GET /songs' , async () => {
+        const res = await chai.request(server).get('/songs');
+        res.status.should.to.equal(200);
+        console.log(res.body);
+        res.body.length.should.to.equal(6);
+    });
 })
