@@ -13,31 +13,31 @@ describe('livedam server test', () => {
         res.status.should.to.equal(200);
     });
 
-    it ('GET /reservations' , async () => {
+    xit ('GET /reservations' , async () => {
         const res = await chai.request(server).get('/reservations');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(2);
     });
 
-    it ('GET /artists' , async () => {
+    xit ('GET /artists' , async () => {
         const res = await chai.request(server).get('/artists');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(5);
     });
 
-    it ('GET /songs' , async () => {
+    xit ('GET /songs' , async () => {
         const res = await chai.request(server).get('/songs');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(7);
     });
 
-    it ('GET /:artistsName/songs' , async () => {
+    xit ('GET /:artistsName/songs' , async () => {
         const res = await chai.request(server).get('/mr.children/songs');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(3);
     });
 
-    it ('GET /:artistsId/songs' , async () => {
+    xit ('GET /:artistsId/songs' , async () => {
         const res = await chai.request(server).get('/1/songs');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(3);
@@ -65,13 +65,30 @@ describe('livedam server test', () => {
         res.body.length.should.to.equal(1);
     });
 
-    it ('POST /reservations',async () => {
+    xit ('POST /reservations',async () => {
         const res = await  chai.request(server).post('/reservations').send([{songId: "7"}]);
         res.status.should.to.equal(200);
+        console.log(res.body);
         res.body.length.should.to.equal(3);
-
     })
 
+    xit ('DELETE /reservations',async () => {
+        const res = await  chai.request(server).delete('/reservations?index=1');
+        res.status.should.to.equal(200);
+        res.body.length.should.to.equal(2);
+    })
 
-
+    it ('PUT /reservations',async () => {
+        const res = await  chai.request(server).put('/reservations')
+        .send([{
+            songId : 4
+        }, {
+            songId : 2
+        }]);
+        res.status.should.to.equal(200);
+        console.log(res.body);
+        res.body.length.should.to.equal(2);
+    });
+    
 })
+

@@ -3,7 +3,8 @@ const cors = require('cors');
 const knex = require('./knex');
 
 const songTime = 10;
-const reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
+let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
+
 
 function setUpServer() {
     const app = express();
@@ -37,6 +38,31 @@ function setUpServer() {
 
         })
     })
+
+    app.delete('/reservations', (req, res) => {
+        reservations.splice( req.query.index, 1 );
+        res.json(reservations);
+    });
+
+    app.put('/reservations', (req, res) => {
+        let newReservations = [];
+
+        Promise.all(req.body.map(song => {
+            return knex.select('songs.id as songId', 'songs.name as songName', 'artists.name as artistName')
+                .from('songs')
+                .innerJoin('artists', 'artists.id', 'songs.artist_id')
+                .where('songs.id', song.songId);
+        }))
+        .then(results => {
+            newReservations = results.flat();
+            reservations = newReservations.map( list => ({...list}));
+            res.status(200).json(reservations);
+        })
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        });
+    });
 
     // artists
     app.get('/artists', (req, res) => {
