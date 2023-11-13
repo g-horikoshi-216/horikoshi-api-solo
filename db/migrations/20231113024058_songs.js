@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
           function(table) {
               table.increments('id').primary();
               table.string('name',100);
-              table.integer('artist_id').notNullable().references('id').inTable('artists');
+              table.integer('artist_id').unsigned().notNullable().references('id').inTable('artists');
               table.timestamps(false, true);
           });
       } else {
