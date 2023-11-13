@@ -9,8 +9,15 @@ chai.should();
 const server = setUpServer();
 
 describe('livedam server test', () => {
-    it ('/healthcheck' , async () => {
+    it ('GET /healthcheck' , async () => {
         const res = await chai.request(server).get('/healthcheck');
         res.status.should.to.equal(200);
+    });
+
+    it ('GET /reservations' , async () => {
+        const res = await chai.request(server).get('/reservations');
+        res.status.should.to.equal(200);
+        console.log(res.body);
+        res.body.length.should.to.equal(2);
     });
 })
