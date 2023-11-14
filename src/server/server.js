@@ -221,27 +221,28 @@ function setUpServer() {
             })
         })
         
-
-
-
-
-
-        // Promise.all(req.body.map(song => {
-        //     return knex.select('songs.id as songId', 'songs.name as songName', 'artists.name as artistName')
-        //         .from('songs')
-        //         .innerJoin('artists', 'artists.id', 'songs.artist_id')
-        //         .where('songs.id', song.songId);
-        // }))
-        // .then(results => {
-        //     newReservations = results.flat();
-        //     reservations = newReservations.map( list => ({...list}));
-        //     res.status(200).json(reservations);
-        // })
-        // .catch(err => {
-        //     console.log(err);
-        //     res.sendStatus(500);
-        // });
     });
+
+    app.delete('/songs', (req, res) => {
+        req.body.forEach( obj => {
+           knex('songs')
+           .where('id',obj.songId)
+           .del()
+           .returning('id')
+           .then(id =>
+               res.json([{
+                   songId: obj.songId,
+                   songName: obj.songName, 
+                   artistId: obj.artistId
+               }])
+           )
+           .catch(err => {
+               console.log(err);
+               res.sendStatus(500);
+           })
+       })
+       
+   });
 
 
 

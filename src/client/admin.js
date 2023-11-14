@@ -107,11 +107,17 @@ function createSongListTable(){
         const td3 = document.createElement('td');
         const td4 = document.createElement('td');
         const button = createEditSongButton(song.songId);
+        const deleteButton = createDeleteSongButton(song.songId);
         
         td1.innerText = index + 1;
         td2.innerText = song.songName;
         td3.innerText = song.artistName;
         td4.appendChild(button);
+        const spacer = document.createElement('span');
+        spacer.innerText=' ';
+        td4.appendChild(spacer);
+        td4.appendChild(deleteButton);
+        
 
         tr.appendChild(td1);
         tr.appendChild(td2);
@@ -197,6 +203,13 @@ function createEditSongButton(songId) {
     return button;
 }
 
+function createDeleteSongButton(songId) {
+    const button = document.createElement('button');
+    button.onclick = () => deleteSongs(songId);
+    button.innerText = '削除';
+    return button;
+}
+
 async function searchSongsByArtistName() {
     const q = document.getElementById('artist-name-input').value;
     const res = await fetch(baseUrl + '/artists/search?q=' + q);
@@ -262,6 +275,18 @@ async function postSongs() {
         adminPageInit();
     }
 }
+
+async function deleteSongs(songId) {
+    try {
+        const res = await deleteData('/songs', [{songId: songId}]);
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+    } finally {
+        adminPageInit();
+    }
+}
+
+
 
 
 function gotoDenmoku() {
