@@ -1,0 +1,155 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+  }
+  
+  .left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  .right-section {
+    flex: 1;
+  }
+
+  .search-container {
+    display: flex;
+    height: 20vh;
+    padding: 10px;
+    box-sizing: border-box;
+    justify-content:center;
+  }
+  
+  .search-left-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  .search-right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+  }
+  
+  h1 {
+    color: #ff4081;
+    margin-top: 20px;
+  }
+  
+  h2 {
+    color: #1976d2;
+  }
+  
+  div {
+    background-color: #ffffff;
+    padding: 20px;
+    margin: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  #search-by-artist-name,
+  #search-by-song-name {
+    margin-top: 0px;
+  }
+  
+  input {
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #1976d2;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #1565c0;
+  }
+  
+  #search-by-artist-name-result,
+  #search-by-song-name-result {
+    background-color: #ffffff;
+    padding: 10px;
+    margin: 0px;
+    border-radius: 0px;
+    box-shadow: 0;
+  }
+
+  #non-reservation-message{
+    background-color: #ffffff;
+    font-size: large;
+    margin: 0px;
+    border-radius: 0px;
+    box-shadow: 0 0px 0px #ffffff;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  table, th, td {
+    border: 1px solid #ddd;
+  }
+  
+  th, td {
+    padding: 15px;
+    text-align: left;
+  }
+
+  .clickable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+  
+  #reservation-table, #search-result-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+  }
+
+  #reservation-table th, #reservation-table td,
+  #search-result-table th, #search-result-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  #reservation-table th, #search-result-table th {
+    background-color: #f2f2f2;
+  }
+
+  #admin-button {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 15px;
+  }
+
+  .container {
+    display: flex;
+    padding: 0px;
+    background-color: #f8f8f8;
+    justify-content: space-between;
+    margin: 0px;
+    border-radius: 0px;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
+  }

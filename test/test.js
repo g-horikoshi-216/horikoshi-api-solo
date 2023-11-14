@@ -65,7 +65,7 @@ describe('livedam server test', () => {
         res.body.length.should.to.equal(1);
     });
 
-    xit ('POST /reservations',async () => {
+    it ('POST /reservations',async () => {
         const res = await  chai.request(server).post('/reservations').send([{songId: "7"}]);
         res.status.should.to.equal(200);
         console.log(res.body);
