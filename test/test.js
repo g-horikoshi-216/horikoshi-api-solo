@@ -13,37 +13,37 @@ describe('livedam server test', () => {
         res.status.should.to.equal(200);
     });
 
-    xit ('GET /reservations' , async () => {
+    it ('GET /reservations' , async () => {
         const res = await chai.request(server).get('/reservations');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(2);
     });
 
-    xit ('GET /artists' , async () => {
+    it ('GET /artists' , async () => {
         const res = await chai.request(server).get('/artists');
         res.status.should.to.equal(200);
-        res.body.length.should.to.equal(5);
+        res.body.length.should.to.equal(3);
     });
 
-    xit ('GET /songs' , async () => {
+    it ('GET /songs' , async () => {
         const res = await chai.request(server).get('/songs');
         res.status.should.to.equal(200);
-        res.body.length.should.to.equal(7);
+        res.body.length.should.to.equal(9);
     });
 
-    xit ('GET /:artistsName/songs' , async () => {
+    it ('GET /:artistsName/songs' , async () => {
         const res = await chai.request(server).get('/mr.children/songs');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(3);
     });
 
-    xit ('GET /:artistsId/songs' , async () => {
+    it ('GET /:artistsId/songs' , async () => {
         const res = await chai.request(server).get('/1/songs');
         res.status.should.to.equal(200);
-        res.body.length.should.to.equal(3);
+        res.body.length.should.to.equal(4);
     });
 
-    xit ('POST /artists' , async () => {
+    it ('POST /artists' , async () => {
         const newArtists = [
             {
                 name: 'Larc en ciel',
@@ -54,7 +54,7 @@ describe('livedam server test', () => {
         res.body.length.should.to.equal(1);
     });
 
-    xit ('POST /artistId/songs' , async () => {
+    it ('POST /artistId/songs' , async () => {
         const newSongs = [
             {
                 name: '誘惑'
@@ -72,7 +72,7 @@ describe('livedam server test', () => {
         res.body.length.should.to.equal(3);
     })
 
-    xit ('DELETE /reservations',async () => {
+    it ('DELETE /reservations',async () => {
         const res = await  chai.request(server).delete('/reservations?index=1');
         res.status.should.to.equal(200);
         res.body.length.should.to.equal(2);
