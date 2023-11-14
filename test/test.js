@@ -1,11 +1,11 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const setUpServer = require('../src/server/server');
+const serversrc = require('../src/server/server');
 
 chai.use(chaiHttp);
 chai.should();
 
-const server = setUpServer();
+const server = serversrc.setUpServer();
 
 describe('livedam server test', () => {
     it ('GET /healthcheck' , async () => {
@@ -65,7 +65,7 @@ describe('livedam server test', () => {
         res.body.length.should.to.equal(1);
     });
 
-    xit ('POST /reservations',async () => {
+    it ('POST /reservations',async () => {
         const res = await  chai.request(server).post('/reservations').send([{songId: "7"}]);
         res.status.should.to.equal(200);
         console.log(res.body);
@@ -88,6 +88,20 @@ describe('livedam server test', () => {
         res.status.should.to.equal(200);
         console.log(res.body);
         res.body.length.should.to.equal(2);
+    });
+
+    it('GET /artists/search?q={songName}', async () => {
+        const res = await chai.request(server).get('/artists/search?q=mr.children');
+        res.status.should.to.equal(200);
+        console.log(res.body);
+        res.body.length.should.to.equal(3);
+    });
+
+    it('GET /songs/search?q={songName}', async () => {
+        const res = await chai.request(server).get('/songs/search?q=OceAN');
+        res.status.should.to.equal(200);
+        console.log(res.body);
+        res.body.length.should.to.equal(1);
     });
     
 })

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="admin-style.css">
+    <script src="admin.js"></script>
+    <title>LIVE DAM - 管理者ページ</title>
+  </head>
+  <body>
+    <h1>LIVE DAM 管理者ページ</h1>
+    <div class="container">
+    <div class="left-section">
+     <h2>アーティスト</h2>
+        <div id="non-artist-message"></div>
+          <div class="insert-artist" id="insert-artist">
+            <h3>アーティスト登録</h3>
+            <input type="text" id="artist-name-input">
+            <button onclick="postArtists()">登録</button>
+          </div>
+          <table  id="artist-list-table"></table>
+    </div>
+    <div class="right-section">
+        <h2>楽曲</h2>
+        <div id="non-song-message"></div>
+        <div class="insert-artist" id="insert-artist">
+          <h3>楽曲登録</h3>
+          <select id="artist-select"></select>
+          <input type="text" id="song-name-input">
+          <button onclick="postSongs()">登録</button>
+        </div>
+          <table  id="song-list-table"></table>
+    </div>
+    </div>
+    <button id="denmoku-button" onclick="gotoDenmoku()">
+      <i class="fas fa-cogs"></i> デンモクページへ
+    </button>
+  </body>
+</html>

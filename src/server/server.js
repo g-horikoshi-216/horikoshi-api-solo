@@ -3,8 +3,8 @@ const cors = require('cors');
 const knex = require('./knex');
 
 const songTime = 10;
-let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
-
+// let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
+let reservations = [];
 
 function setUpServer() {
     const app = express();
@@ -21,6 +21,7 @@ function setUpServer() {
     })
 
     app.post('/reservations', (req, res) => {
+        console.log(req.body);
         req.body.forEach(song => {
             knex.queryBuilder()
             .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
@@ -66,7 +67,21 @@ function setUpServer() {
 
     // artists
     app.get('/artists', (req, res) => {
-        knex('artists').select('id','name')
+        knex('artists').select('id as artistId','name as artistName')
+        .then(results => res.json(results))
+        .catch(err => {
+            console.log(err);
+            res.sendStatus(500);
+        })
+    });
+
+    app.get('/artists/search', (req, res) => {
+        console.log(req.query.q);
+        knex.queryBuilder()
+        .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
+        .from('songs')
+        .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .where('artists.name', 'ilike' , req.query.q)
         .then(results => res.json(results))
         .catch(err => {
             console.log(err);
@@ -75,6 +90,7 @@ function setUpServer() {
     });
 
     app.post('/artists', (req,res) => {
+        console.log("POST /artists: " , req.body);
         req.body.forEach( obj => {
             knex('artists')
             .insert({name: obj.name})
@@ -90,10 +106,40 @@ function setUpServer() {
 
     // songs
     app.get('/songs', (req, res) => {
+        const songId = req.query.songId;
+        console.log(songId)
+        if (isNaN(Number(songId))) {
+            knex.queryBuilder()
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
+            .from('songs')
+            .innerJoin('artists', 'artists.id', 'songs.artist_id')
+            .then(results => res.json(results))
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            })
+        } else {
+
+            knex.queryBuilder()
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
+            .from('songs')
+            .innerJoin('artists', 'artists.id', 'songs.artist_id')
+            .where('songs.id', songId)
+            .then(results => res.json(results))
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            });
+        }
+    });
+
+    app.get('/songs/search', (req, res) => {
+        console.log(req.query.q)
         knex.queryBuilder()
-        .select('songs.id','songs.name as name', 'artists.name as artistName' )
+        .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
         .from('songs')
         .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        .where('songs.name', 'ilike', req.query.q)
         .then(results => res.json(results))
         .catch(err => {
             console.log(err);
@@ -101,16 +147,13 @@ function setUpServer() {
         })
     });
 
-    app.get('/songs', (req, res) => {
-        k
-    })
-
     app.get('/:artistIdorName/songs', (req, res) => {
         const artistIdorName = req.params.artistIdorName;
         if (!isNaN(Number(artistIdorName))) {
             // id
+            console.log(artistIdorName);
             knex.queryBuilder()
-            .select('songs.id','songs.name as name', 'artists.name as artistName' )
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
             .from('songs')
             .innerJoin('artists', 'artists.id', 'songs.artist_id')
             .where('artists.id', artistIdorName)
@@ -122,7 +165,7 @@ function setUpServer() {
         } else {
             // name
             knex.queryBuilder()
-            .select('songs.id','songs.name as name', 'artists.name as artistName' )
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
             .from('songs')
             .innerJoin('artists', 'artists.id', 'songs.artist_id')
             .where('artists.name', artistIdorName)
@@ -159,11 +202,51 @@ function setUpServer() {
         }
     });
 
-    
+    app.put('/songs', (req, res) => {
+         req.body.forEach( obj => {
+            knex('songs')
+            .where('id',obj.songId)
+            .update({name: obj.songName, artist_id: obj.artistId})
+            .returning('id')
+            .then(id =>
+                res.json([{
+                    songId: obj.songId,
+                    songName: obj.songName, 
+                    artistId: obj.artistId
+                }])
+            )
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            })
+        })
+        
+    });
+
+    app.delete('/songs', (req, res) => {
+        req.body.forEach( obj => {
+           knex('songs')
+           .where('id',obj.songId)
+           .del()
+           .returning('id')
+           .then(id =>
+               res.json([{
+                   songId: obj.songId,
+                   songName: obj.songName, 
+                   artistId: obj.artistId
+               }])
+           )
+           .catch(err => {
+               console.log(err);
+               res.sendStatus(500);
+           })
+       })
+       
+   });
 
 
 
     return app;
 }
 
-module.exports = setUpServer;
+module.exports = { setUpServer };

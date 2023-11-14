@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <script src="denmoku.js"></script>
+    <title>LIVE DAM</title>
+  </head>
+  <body>
+    <h1>LIVE DAM</h1>
+    <div class="container">
+    <div class="left-section">
+        <h2>予約曲リスト</h2>
+        <div id="non-reservation-message"></div>
+        <table  id="reservation-table"></table>
+    </div>
+    <div class="right-section">
+        <h2>楽曲検索</h2>
+        <div class="search-container">
+        <div class="search-left-section" id="search-by-artist-name">
+            <h3>歌手名で検索</h3>
+            <input type="text" id="artist-name-input">
+            <button onclick="searchSongsByArtistName()">検索</button>
+        </div>
+         <div class="search-right-section" id="search-by-song-name">
+            <h3>曲名で検索</h3>
+            <input type="text" id="song-name-input">
+            <button onclick="searchSongsBySongName()">検索</button>
+        </div>
+    </div>
+        <div id="search-result"><table id="search-result-table"></table></div>
+
+    </div>
+    <button id="admin-button" onclick="gotoAdmin()">
+        <i class="fas fa-cogs"></i> 管理者ページへ
+      </button>
+  </body>
+
+</html>
