@@ -314,6 +314,7 @@ async function adminPageInit() {
     await getArtists();
     await getSongs();
     const select = document.getElementById('artist-select');
+    select.innerHTML = '';
     
     artists.forEach( artist => {
         let option = document.createElement('option');
