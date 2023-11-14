@@ -3,6 +3,9 @@ const baseUrl = 'http://localhost:3000';
 const reservationTableHeadHtml = "<thead><tr><th>No</th><th>曲名</th><th>アーティスト</th><th></th></tr></thead>";
 const searchResultTableHeadHtml = "<thead><tr><th>曲名</th><th>アーティスト</th><th></th></tr></thead>";
 
+let thisSong;
+let artists;
+
 async function post(url, data) {
     const response = await fetch(baseUrl + url, {
       method: "POST",
@@ -35,6 +38,15 @@ async function deleteData(url, data) {
     });
     return response.json(); 
 }
+
+async function getArtists() {
+    const res = await fetch(baseUrl + '/artists');
+    const data = await res.json();
+
+    artists = data.map( list => ({...list}));
+    console.log(artists);
+}
+
 
 function createReservationTable(songs){
     const div = document.getElementById("non-reservation-message");
@@ -207,16 +219,42 @@ function gotoAdmin() {
 function gotoArtistPage(artistIdorName) {
     window.location.href = './artist.html?artist=' + encodeURIComponent(artistIdorName);
 }
-  
-async function artistPageInit() {
-    const searchParams = new URLSearchParams( window.location.search );
-    const artistIdorName = searchParams.get('artist');
 
-    const songs = await searchSongsByArtistIdorName(artistIdorName);
-    const artistName = document.getElementById('artist-name');
-    artistName.innerText = songs[0]["artistName"];
-    console.log(songs);
-    createSongListTable(songs);
+async function updateSongs() {
+    try {
+    const input = document.getElementById('song-name-input').value;
+    const artistId = document.getElementById('artist-select').value;
+
+    console.log(input,artistId);
+   
+    const res = await put('/songs',[{songId:thisSong.songId, songName: input, artistId: artistId}]);
+
+    gotoAdmin();
+    } catch (err) {
+        console.log(err);
+    }
+}
+  
+async function pageInit() {
+    const searchParams = new URLSearchParams( window.location.search );
+    const songId = searchParams.get('songId');
+    const res = await fetch(baseUrl + '/songs?songId=' + songId); 
+    const data = await res.json();
+    thisSong = data[0];
+
+    const input = document.getElementById('song-name-input');
+    input.value = thisSong.songName;
+
+
+    await getArtists();
+    const select = document.getElementById('artist-select');
+    
+    artists.forEach( artist => {
+        let option = document.createElement('option');
+        option.innerText = artist.artistName;
+        option.value = artist.artistId;
+        select.appendChild(option);
+    })
 }
 
-window.onload = artistPageInit;
+window.onload = pageInit;

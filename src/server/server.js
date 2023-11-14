@@ -3,8 +3,8 @@ const cors = require('cors');
 const knex = require('./knex');
 
 const songTime = 10;
-let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
-//let reservations = [];
+// let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
+let reservations = [];
 
 function setUpServer() {
     const app = express();
@@ -90,6 +90,7 @@ function setUpServer() {
     });
 
     app.post('/artists', (req,res) => {
+        console.log("POST /artists: " , req.body);
         req.body.forEach( obj => {
             knex('artists')
             .insert({name: obj.name})
@@ -105,15 +106,31 @@ function setUpServer() {
 
     // songs
     app.get('/songs', (req, res) => {
-        knex.queryBuilder()
-        .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
-        .from('songs')
-        .innerJoin('artists', 'artists.id', 'songs.artist_id')
-        .then(results => res.json(results))
-        .catch(err => {
-            console.log(err);
-            res.sendStatus(500);
-        })
+        const songId = req.query.songId;
+        console.log(songId)
+        if (isNaN(Number(songId))) {
+            knex.queryBuilder()
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
+            .from('songs')
+            .innerJoin('artists', 'artists.id', 'songs.artist_id')
+            .then(results => res.json(results))
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            })
+        } else {
+
+            knex.queryBuilder()
+            .select('songs.id as songId','songs.name as songName', 'artists.name as artistName' )
+            .from('songs')
+            .innerJoin('artists', 'artists.id', 'songs.artist_id')
+            .where('songs.id', songId)
+            .then(results => res.json(results))
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            });
+        }
     });
 
     app.get('/songs/search', (req, res) => {
@@ -183,6 +200,47 @@ function setUpServer() {
                 })
             })
         }
+    });
+
+    app.put('/songs', (req, res) => {
+         req.body.forEach( obj => {
+            knex('songs')
+            .where('id',obj.songId)
+            .update({name: obj.songName, artist_id: obj.artistId})
+            .returning('id')
+            .then(id =>
+                res.json([{
+                    songId: obj.songId,
+                    songName: obj.songName, 
+                    artistId: obj.artistId
+                }])
+            )
+            .catch(err => {
+                console.log(err);
+                res.sendStatus(500);
+            })
+        })
+        
+
+
+
+
+
+        // Promise.all(req.body.map(song => {
+        //     return knex.select('songs.id as songId', 'songs.name as songName', 'artists.name as artistName')
+        //         .from('songs')
+        //         .innerJoin('artists', 'artists.id', 'songs.artist_id')
+        //         .where('songs.id', song.songId);
+        // }))
+        // .then(results => {
+        //     newReservations = results.flat();
+        //     reservations = newReservations.map( list => ({...list}));
+        //     res.status(200).json(reservations);
+        // })
+        // .catch(err => {
+        //     console.log(err);
+        //     res.sendStatus(500);
+        // });
     });
 
 

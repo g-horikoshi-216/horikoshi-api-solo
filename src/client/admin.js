@@ -184,17 +184,15 @@ async function getReservations() {
 
 
 function createEditArtistButton(artistId) {
-    selectedArtistId = artistId;
     const button = document.createElement('button');
-    button.onclick = () => gotoEditArtistPage();
+    button.onclick = () => gotoEditArtistPage(artistId);
     button.innerText = '編集';
     return button;
 }
 
 function createEditSongButton(songId) {
-    selectedSongId = songId;
     const button = document.createElement('button');
-    button.onclick = () => gotoEditSongPage();
+    button.onclick = () => gotoEditSongPage(songId);
     button.innerText = '編集';
     return button;
 }
@@ -230,6 +228,19 @@ async function getArtists() {
     console.log(artists);
 }
 
+async function postArtists() {
+    try {
+        let artistName = document.getElementById("artist-name-input").value;
+        const res = await post('/artists', [{'name': artistName}]);
+
+        document.getElementById('artist-name-input').value = '';
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+    } finally {
+        adminPageInit();
+    }
+}
+
 async function getSongs() {
     const res = await fetch(baseUrl + '/songs');
     const data = await res.json();
@@ -237,6 +248,21 @@ async function getSongs() {
     songs = data.map( list => ({...list}));
     console.log(songs);
 }
+
+async function postSongs() {
+    try {
+        const artistId = document.getElementById('artist-select').value;
+        let songName = document.getElementById("song-name-input").value;
+        const res = await post('/' + artistId + '/songs', [{'name': songName}]);
+
+        document.getElementById('song-name-input').value = '';
+    } catch (error) {
+        console.error('Error fetching reservations:', error);
+    } finally {
+        adminPageInit();
+    }
+}
+
 
 function gotoDenmoku() {
     window.location.href = './denmoku.html';
@@ -251,16 +277,14 @@ function gotoArtistPage(artistIdorName) {
     window.location.href = './artist.html?artist=' + encodeURIComponent(artistIdorName);
 }
 
-function gotoEditArtistPage() {
-    window.location.href = './edit-artist.html?artist=' + encodeURIComponent(selectedArtistId);
+function gotoEditArtistPage(artistId) {
+    window.location.href = './edit-artist.html?artistId=' + artistId;
 }
 
-function gotoEditSongPage() {
-    window.location.href = './edit-song.html?song=' + encodeURIComponent(selectedSongId);
+function gotoEditSongPage(songId) {
+    window.location.href = './edit-song.html?songId=' + songId;
 }
 
-
-  
 async function adminPageInit() {
     await getArtists();
     await getSongs();
@@ -269,6 +293,7 @@ async function adminPageInit() {
     artists.forEach( artist => {
         let option = document.createElement('option');
         option.innerText = artist.artistName;
+        option.value = artist.artistId;
         select.appendChild(option);
     })
 
