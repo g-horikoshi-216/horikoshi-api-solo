@@ -3,8 +3,8 @@ const cors = require('cors');
 const knex = require('./knex');
 
 const songTime = 10;
-// let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
-let reservations = [];
+let reservations = [{songId: 0, songName: "HANABI", artistName : "mr.children", },{songId: 1, songName: "ultra soul", artistName : "B'z"}];
+//let reservations = [];
 
 function setUpServer() {
     const app = express();
